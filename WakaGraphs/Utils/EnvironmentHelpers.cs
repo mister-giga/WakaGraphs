@@ -15,7 +15,7 @@ namespace WakaGraphs.Utils
                 , EnvironmentVariableTarget.User
 #endif
                 );
-            Console.WriteLine("aa" + value);
+
             if(required && value == null)
                 throw new ArgumentException($"{variable} is not provided", variable);
 
