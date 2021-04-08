@@ -32,4 +32,4 @@ RUN dotnet publish "./WakaGraphs/WakaGraphs.csproj" -c Release --runtime alpine-
 FROM mcr.microsoft.com/dotnet/runtime:5.0 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["/app/WakaGraphs"]
+ENTRYPOINT ["dotnet", "/app/WakaGraphs.dll"]
