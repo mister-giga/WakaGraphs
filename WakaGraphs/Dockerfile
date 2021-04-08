@@ -48,7 +48,7 @@ COPY ["WakaGraphs.Templates/WakaGraphs.Templates.csproj", "WakaGraphs.Templates/
 
 #RUN dotnet restore "WakaGraphs/WakaGraphs.csproj" --runtime alpine-x64
 COPY . .
-RUN dotnet publish "WakaGraphs/WakaGraphs.csproj" -c Release --runtime alpine-x64 -o /app/publish --self-contained true -p:PublishTrimmed=true -p:PublishSingleFile=true
+RUN dotnet publish "WakaGraphs/WakaGraphs.csproj" -c Release --runtime alpine-x64 -o /app/publish --self-contained true -p:PublishSingleFile=true
 
 FROM mcr.microsoft.com/dotnet/runtime-deps:3.1-alpine AS final
 WORKDIR /app
