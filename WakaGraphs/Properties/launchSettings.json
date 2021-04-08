@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WakaGraphs": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
