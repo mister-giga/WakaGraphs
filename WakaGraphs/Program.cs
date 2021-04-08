@@ -1,8 +1,7 @@
 ﻿using System;
 using WakaGraphs.Templates.Models;
 using WakaGraphs.Utils;
-using Runtime = System.Runtime.InteropServices.RuntimeInformation;
-Console.WriteLine(Runtime.FrameworkDescription);
+
 var wakatimeKey = EnvironmentHelpers.GetEnvVariable("WAKATIME_KEY", required: true);
 var wakaApiClient = new WakaApiClient(wakatimeKey);
 var allTimeData = await wakaApiClient.GetAllTimeDataAsync();
