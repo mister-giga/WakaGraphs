@@ -11,9 +11,9 @@ namespace WakaGraphs.Utils
         public static string GetEnvVariable(string variable, string def = null, bool required = false)
         {
             var value = Environment.GetEnvironmentVariable(variable
-#if DEBUG
-                , EnvironmentVariableTarget.User
-#endif
+//#if DEBUG
+//                , EnvironmentVariableTarget.User
+//#endif
                 );
 
             if(required && value == null)
