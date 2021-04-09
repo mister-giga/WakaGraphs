@@ -13,14 +13,20 @@ using WakaGraphs.Utils;
 string userName = "mister-giga";
 string repoName = "temporary";
 string ghToken = "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";
+string statsDir = "stats";
+string wakatimeApiKey = "";
 
 Console.WriteLine("START");
 CliCommandRunner.Git($"clone https://github.com/{userName}/{repoName}.git", Console.WriteLine);
 
-
 Directory.SetCurrentDirectory(repoName);
 
-File.AppendAllLines("commited.txt", new string[] { DateTime.Now.ToString() });
+
+Directory.CreateDirectory(statsDir);
+Directory.SetCurrentDirectory(statsDir);
+
+
+
 
 
 CliCommandRunner.Git("config user.name \"WakaGraphsBot\"", Console.WriteLine);
