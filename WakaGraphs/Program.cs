@@ -10,44 +10,36 @@ using System.Threading.Tasks;
 using WakaGraphs.Templates.Models;
 using WakaGraphs.Utils;
 
-//var e = Directory.GetFiles("/usr/bin").Where(x=>x.Contains("git")).OrderBy(x => x).ToArray();
+string userName = "mister-giga";
+string repoName = "temporary";
+string ghToken = "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";
 
-
-//CliCommandRunner
 Console.WriteLine("START");
-//CliCommandRunner.Run("/usr/bin/git", "clone https://github.com/mister-giga/temporary.git", Console.WriteLine);
-
-//var txt = File.ReadAllText("temporary/commited.txt");
-
-//Directory.SetCurrentDirectory("temporary");
+CliCommandRunner.Git($"clone https://github.com/{userName}/{repoName}.git", Console.WriteLine);
 
 
+Directory.SetCurrentDirectory(repoName);
 
-//File.AppendAllLines("commited.txt", new string[] { DateTime.Now.ToString() });
+File.AppendAllLines("commited.txt", new string[] { DateTime.Now.ToString() });
 
 
-//CliCommandRunner.Run("/usr/bin/git", "config --global user.name \"WakaGraphsBot\"", Console.WriteLine);
-//CliCommandRunner.Run("/usr/bin/git", "config --global user.email @wakagraphsbot", Console.WriteLine);
-//CliCommandRunner.Run("/usr/bin/git", "config --global user.username \"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\"", Console.WriteLine);
-//CliCommandRunner.Run("/usr/bin/git", "config --global user.password \"\"", Console.WriteLine);
-//
-//
-//
-//CliCommandRunner.Run("/usr/bin/git", "add .", Console.WriteLine);
-//CliCommandRunner.Run("/usr/bin/git", "commit -m\"temp message\"", Console.WriteLine);
-//CliCommandRunner.Run("/usr/bin/git", "push", Console.WriteLine);
+CliCommandRunner.Git("config user.name \"WakaGraphsBot\"", Console.WriteLine);
+CliCommandRunner.Git("config user.email @wakagraphsbot", Console.WriteLine);
+
+CliCommandRunner.Git("add .", Console.WriteLine);
+CliCommandRunner.Git("commit -m\"WakaGraphs generated\"", Console.WriteLine);
+CliCommandRunner.Git($"push https://{ghToken}@github.com/{userName}/{repoName}.git", Console.WriteLine);
 
 //CliCommandRunner.Run("mkdir", "/usr/tmpsrc", Console.WriteLine);
 
 Console.WriteLine("END");
-
-
+return;
 Directory.SetCurrentDirectory("/usr");
 
 
 try
 {
-    string repoName = EnvironmentHelpers.GetEnvVariable("GITHUB_REPOSITORY", required: true);
+    repoName = EnvironmentHelpers.GetEnvVariable("GITHUB_REPOSITORY", required: true);
     var githubRepoUrl = $"https://github.com/{repoName}.git";
 
     var s = Repository.ListRemoteReferences(githubRepoUrl).ToArray();

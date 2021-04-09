@@ -9,6 +9,7 @@ namespace WakaGraphs.Utils
 {
     class CliCommandRunner
     {
+        public static void Git(string arguments, Action<string> onOutput = null) => Run("/usr/bin/git", arguments, onOutput);
         public static void Run(string fileName, string arguments, Action<string> onOutput = null)
         {
             Console.WriteLine();
