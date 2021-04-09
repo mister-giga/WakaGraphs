@@ -10,66 +10,60 @@ using System.Threading.Tasks;
 using WakaGraphs.Templates.Models;
 using WakaGraphs.Utils;
 
-var e = Directory.GetFiles("/usr/bin").Where(x=>x.Contains("git")).OrderBy(x => x).ToArray();
+//var e = Directory.GetFiles("/usr/bin").Where(x=>x.Contains("git")).OrderBy(x => x).ToArray();
 
-Console.WriteLine("ss");
-foreach(var item in e)
-{
-    Console.WriteLine(item);
-}
-Console.WriteLine("ee");
+
 //CliCommandRunner
+Console.WriteLine("START");
+//CliCommandRunner.Run("/usr/bin/git", "clone https://github.com/mister-giga/temporary.git", Console.WriteLine);
 
-return;
+//var txt = File.ReadAllText("temporary/commited.txt");
 
-
-var eee = Directory.Exists("ss");
-List<string> dirs = new();
-
-
-Enu("ss");
-
-Console.WriteLine();
+//Directory.SetCurrentDirectory("temporary");
 
 
-void Enu(string path)
-{
-    foreach(var dir in Directory.GetDirectories(path))
-    {
-        dirs.Add(dir);
-        Enu(dir);
-    }
 
-    foreach(var file in Directory.GetFiles(path))
-    {
-        dirs.Add(file);
-    }
-}
+//File.AppendAllLines("commited.txt", new string[] { DateTime.Now.ToString() });
+
+
+//CliCommandRunner.Run("/usr/bin/git", "config --global user.name \"WakaGraphsBot\"", Console.WriteLine);
+//CliCommandRunner.Run("/usr/bin/git", "config --global user.email @wakagraphsbot", Console.WriteLine);
+//CliCommandRunner.Run("/usr/bin/git", "config --global user.username \"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\"", Console.WriteLine);
+//CliCommandRunner.Run("/usr/bin/git", "config --global user.password \"\"", Console.WriteLine);
+//
+//
+//
+//CliCommandRunner.Run("/usr/bin/git", "add .", Console.WriteLine);
+//CliCommandRunner.Run("/usr/bin/git", "commit -m\"temp message\"", Console.WriteLine);
+//CliCommandRunner.Run("/usr/bin/git", "push", Console.WriteLine);
+
+//CliCommandRunner.Run("mkdir", "/usr/tmpsrc", Console.WriteLine);
+
+Console.WriteLine("END");
+
+
+Directory.SetCurrentDirectory("/usr");
 
 
 try
 {
-
-    var gitCredentials = new UsernamePasswordCredentials()
-    {
-        Username = "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",
-        Password = ""
-    };
-    var gitCredentialsHandler = new CredentialsHandler(
-            (url, usernameFromUrl, types) => gitCredentials);
-
     string repoName = EnvironmentHelpers.GetEnvVariable("GITHUB_REPOSITORY", required: true);
     var githubRepoUrl = $"https://github.com/{repoName}.git";
 
     var s = Repository.ListRemoteReferences(githubRepoUrl).ToArray();
-   
-    if(Directory.Exists("src"))
-        Directory.Delete("src", true);
-    await Bash("mkdir src");
-    var exists = Directory.Exists("src");
-    Repository.Clone(githubRepoUrl, "src");
-    File.AppendAllLines("src/commited.txt", new string[] { DateTime.Now.ToString() });
-    using(var repo = new Repository("src"))
+
+    if(Directory.Exists("tempsource"))
+        Directory.Delete("tempsource", true);
+    
+    Repository.Clone(githubRepoUrl, "tempsource");
+
+    Directory.SetCurrentDirectory("tempsource");
+
+    File.AppendAllLines("commited.txt", new string[] { DateTime.Now.ToString() });
+
+
+    //Directory.SetCurrentDirectory("../");
+    using(var repo = new Repository("./"))
     {
         Commands.Stage(repo, "*");
         var branch = repo.Branches.First(x => x.IsCurrentRepositoryHead);
@@ -90,7 +84,12 @@ try
 
 
         LibGit2Sharp.PushOptions options = new LibGit2Sharp.PushOptions();
-        options.CredentialsProvider = gitCredentialsHandler;
+        options.CredentialsProvider = new CredentialsHandler(
+            (url, usernameFromUrl, types) => new UsernamePasswordCredentials()
+            {
+                Username = "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",
+                Password = ""
+            });
 
         repo.Network.Push(branch, options);
     }

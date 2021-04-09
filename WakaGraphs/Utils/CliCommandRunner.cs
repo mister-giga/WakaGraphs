@@ -11,6 +11,8 @@ namespace WakaGraphs.Utils
     {
         public static void Run(string fileName, string arguments, Action<string> onOutput = null)
         {
+            Console.WriteLine();
+            Console.WriteLine($"{fileName} {arguments}");
             var process = Process.Start(new ProcessStartInfo
             {
                 CreateNoWindow = true,

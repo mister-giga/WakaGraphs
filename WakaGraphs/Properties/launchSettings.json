@@ -6,7 +6,7 @@
     "Docker": {
       "commandName": "Docker",
       "environmentVariables": {
-        "GITHUB_REPOSITORY": "mister-giga/empty" // "mister-giga/temporary"
+        "GITHUB_REPOSITORY":  "mister-giga/temporary"
       }
     }
   }
