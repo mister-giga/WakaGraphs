@@ -12,7 +12,7 @@ using WakaGraphs.Utils;
 
 string userName = "mister-giga";
 string repoName = "temporary";
-string ghToken = "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";
+string ghToken = EnvironmentHelpers.GetEnvVariable("GH_TOKEN", required: true);
 string statsDir = "stats";
 string wakaApiKey = "63bb7731-fcb2-4f39-b54a-e6fd29818ad4";
 
