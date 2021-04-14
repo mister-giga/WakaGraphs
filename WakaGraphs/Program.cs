@@ -13,15 +13,19 @@ string repoName = EnvironmentHelpers.GetRepoName(out var userName);
 string ghToken = EnvironmentHelpers.GetEnvVariable("GH_TOKEN", required: true);
 string statsDir = EnvironmentHelpers.GetEnvVariable("STATS_DIR", def: "stats");
 string wakaApiKey = EnvironmentHelpers.GetEnvVariable("WAKATIME_KEY", required: true);
+string branch = EnvironmentHelpers.GetEnvVariable("BRANCH", required: true);
 
 
 var wakaApiClient = new WakaApiClient(wakaApiKey);
 
 Console.WriteLine("START");
-CliCommandRunner.Git($"clone https://github.com/{userName}/{repoName}.git", Console.WriteLine);
+CliCommandRunner.Git($"clone --branch {branch} https://github.com/{userName}/{repoName}.git", Console.WriteLine);
 
 Directory.SetCurrentDirectory(repoName);
 Directory.CreateDirectory(statsDir);
+
+
+List<TemplateModelBase> templates = new List<TemplateModelBase>();
 
 
 var allTimeData = await wakaApiClient.GetAllTimeDataAsync();
@@ -30,12 +34,24 @@ Console.WriteLine("api resp: ");
 Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(allTimeData, new JsonSerializerOptions { WriteIndented = true }));
 
 Console.WriteLine("SVG Content - START");
-await new AllTimeData
+
+templates.Add(new AllTimeData
 {
     LastActive = allTimeData.Data.Range.End,
     MemberSince = allTimeData.Data.Range.Start,
     TotalTimeSpent = TimeSpan.FromSeconds(allTimeData.Data.Total_seconds)
-}.GenerateAsync(statsDir);
+});
+
+var samplesFilePath = Path.Combine(statsDir, "sample.md");
+if(File.Exists(samplesFilePath))
+    File.Delete(samplesFilePath);
+
+foreach(var template in templates)
+{
+    await template.GenerateAsync(statsDir);
+    File.AppendAllText(samplesFilePath, template.GetSample(userName, repoName, branch, statsDir));
+}
+
 Console.WriteLine("SVG Content - END");
 
 
