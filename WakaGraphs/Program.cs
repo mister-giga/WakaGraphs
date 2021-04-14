@@ -6,11 +6,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using WakaGraphs.Templates.Models;
 using WakaGraphs.Utils;
 
-string repo = EnvironmentHelpers.GetEnvVariable("GITHUB_REPOSITORY", required: true);
 string repoName = EnvironmentHelpers.GetRepoName(out var userName);
 string ghToken = EnvironmentHelpers.GetEnvVariable("GH_TOKEN", required: true);
 string statsDir = EnvironmentHelpers.GetEnvVariable("STATS_DIR", def: "stats");
@@ -27,6 +27,9 @@ Directory.CreateDirectory(statsDir);
 
 
 var allTimeData = await wakaApiClient.GetAllTimeDataAsync();
+
+Console.WriteLine("api resp: ");
+Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(allTimeData, new JsonSerializerOptions { WriteIndented = true }));
 
 Console.WriteLine("SVG Content - START");
 await new AllTimeData
