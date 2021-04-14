@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 using WakaGraphs.Templates.Models;
 using WakaGraphs.Utils;
 
-string userName = "mister-giga";
-string repoName = "temporary";
+string repo = EnvironmentHelpers.GetEnvVariable("GITHUB_REPOSITORY", required: true);
+string repoName = EnvironmentHelpers.GetRepoName(out var userName);
 string ghToken = EnvironmentHelpers.GetEnvVariable("GH_TOKEN", required: true);
-string statsDir = "stats";
-string wakaApiKey = "63bb7731-fcb2-4f39-b54a-e6fd29818ad4";
+string statsDir = EnvironmentHelpers.GetEnvVariable("STATS_DIR", def: "stats");
+string wakaApiKey = EnvironmentHelpers.GetEnvVariable("WAKATIME_KEY", required: true);
 
 
 var wakaApiClient = new WakaApiClient(wakaApiKey);

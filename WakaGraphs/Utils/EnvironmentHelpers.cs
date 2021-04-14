@@ -11,9 +11,9 @@ namespace WakaGraphs.Utils
         public static string GetEnvVariable(string variable, string def = null, bool required = false)
         {
             var value = Environment.GetEnvironmentVariable(variable
-//#if DEBUG
-//                , EnvironmentVariableTarget.User
-//#endif
+                //#if DEBUG
+                //                , EnvironmentVariableTarget.User
+                //#endif
                 );
 
             if(required && value == null)
@@ -26,5 +26,11 @@ namespace WakaGraphs.Utils
 
         public static bool GetEnvVariable(string variable, bool def, bool required = false) => GetEnvVariable(variable, def.ToString(), required).Equals("True", StringComparison.OrdinalIgnoreCase);
 
+        public static string GetRepoName(out string userName)
+        {
+            var repo = GetEnvVariable("GITHUB_REPOSITORY", required: true).Split('/');
+            userName = repo[0];
+            return repo[1];
+        }
     }
 }
