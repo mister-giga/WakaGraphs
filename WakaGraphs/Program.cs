@@ -14,6 +14,7 @@ string ghToken = EnvironmentHelpers.GetEnvVariable("GH_TOKEN", required: true);
 string statsDir = EnvironmentHelpers.GetEnvVariable("STATS_DIR", def: "stats");
 string wakaApiKey = EnvironmentHelpers.GetEnvVariable("WAKATIME_KEY", required: true);
 string branch = EnvironmentHelpers.GetEnvVariable("BRANCH", required: true);
+string readmeFilePath = "README.md";
 
 
 var wakaApiClient = new WakaApiClient(wakaApiKey);
@@ -55,6 +56,45 @@ foreach(var template in templates)
 Console.WriteLine("SVG Content - END");
 
 
+
+
+//if(File.Exists(readmeFilePath))
+//{
+//    var readmeContent = File.ReadAllLines(readmeFilePath);
+
+//    var srcStartContent = $"src='https://raw.githubusercontent.com/{userName}/{repoName}/";
+//    var srcEndContent = ".svg'";
+
+//    for(int i = 0; i < readmeContent.Length; i++)
+//    {
+//        var line = readmeContent[i];
+//        var srcStartIndex = line.IndexOf(srcStartContent);
+//        if(srcStartIndex < 0)
+//            continue;
+
+//        var endIndex = line.IndexOf(srcEndContent, srcStartIndex);
+//        if(endIndex < 0)
+//            continue;
+
+//        var firstPart = line.Substring(0, srcStartIndex + srcStartContent.Length);
+//        var midPart = line.Substring(srcStartIndex + srcStartContent.Length, endIndex);
+//        var endPart = line.Substring(endIndex);
+
+//        var fileName = midPart.Split('/').Last();
+
+//        //todo
+
+//        readmeContent[i] = string.Concat(firstPart, midPart, ".svg", endPart);
+//    }
+
+//    File.WriteAllLines(readmeFilePath, readmeContent);
+//}
+//else
+//{
+//    Console.WriteLine($"{readmeFilePath} does not exist");
+//}
+
+
 CliCommandRunner.Git("config user.name \"WakaGraphsBot\"", Console.WriteLine);
 CliCommandRunner.Git("config user.email @wakagraphsbot", Console.WriteLine);
 
@@ -67,125 +107,3 @@ CliCommandRunner.Git($"push https://{ghToken}@github.com/{userName}/{repoName}.g
 Console.WriteLine("END");
 
 
-
-
-
-//try
-//{
-//    repoName = EnvironmentHelpers.GetEnvVariable("GITHUB_REPOSITORY", required: true);
-//    var githubRepoUrl = $"https://github.com/{repoName}.git";
-
-//    var s = Repository.ListRemoteReferences(githubRepoUrl).ToArray();
-
-//    if(Directory.Exists("tempsource"))
-//        Directory.Delete("tempsource", true);
-    
-//    Repository.Clone(githubRepoUrl, "tempsource");
-
-//    Directory.SetCurrentDirectory("tempsource");
-
-//    File.AppendAllLines("commited.txt", new string[] { DateTime.Now.ToString() });
-
-
-//    //Directory.SetCurrentDirectory("../");
-//    using(var repo = new Repository("./"))
-//    {
-//        Commands.Stage(repo, "*");
-//        var branch = repo.Branches.First(x => x.IsCurrentRepositoryHead);
-
-//        Signature author = new Signature("WakaGraphBot", "@wakagraphbot", DateTime.Now);
-//        Signature committer = author;
-
-//        // Commit to the repository
-
-//        try
-//        {
-//            Commit commit = repo.Commit("Here's a commit i made!", author, committer);
-//        }
-//        catch(LibGit2Sharp.EmptyCommitException)
-//        {
-//            return;
-//        }
-
-
-//        LibGit2Sharp.PushOptions options = new LibGit2Sharp.PushOptions();
-//        options.CredentialsProvider = new CredentialsHandler(
-//            (url, usernameFromUrl, types) => new UsernamePasswordCredentials()
-//            {
-//                Username = "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",
-//                Password = ""
-//            });
-
-//        repo.Network.Push(branch, options);
-//    }
-
-//    var wakatimeKey = EnvironmentHelpers.GetEnvVariable("WAKATIME_KEY", required: true);
-//    var wakaApiClient = new WakaApiClient(wakatimeKey);
-//    var allTimeData = await wakaApiClient.GetAllTimeDataAsync();
-
-//    Console.WriteLine("SVG Content - START");
-//    Console.WriteLine(await new AllTimeData
-//    {
-//        LastActive = allTimeData.Data.Range.End,
-//        MemberSince = allTimeData.Data.Range.Start,
-//        TotalTimeSpent = TimeSpan.FromSeconds(allTimeData.Data.Total_seconds)
-//    }.GetStringAsync());
-//    Console.WriteLine("SVG Content - END");
-
-//    Console.WriteLine(DateTime.Now);
-
-//}
-//catch(Exception ex)
-//{
-//    Console.WriteLine(ex);
-//}
-
-
-
-
-
-
-
-
-//static Task<int> Bash(string cmd)
-//{
-//    var source = new TaskCompletionSource<int>();
-//    var escapedArgs = cmd.Replace("\"", "\\\"");
-//    var process = new Process
-//    {
-//        StartInfo = new ProcessStartInfo
-//        {
-//            FileName = "bash",
-//            Arguments = $"-c \"{escapedArgs}\"",
-//            RedirectStandardOutput = true,
-//            RedirectStandardError = true,
-//            UseShellExecute = false,
-//            CreateNoWindow = true
-//        },
-//        EnableRaisingEvents = true
-//    };
-//    process.Exited += (sender, args) =>
-//    {
-//        if(process.ExitCode == 0)
-//        {
-//            source.SetResult(0);
-//        }
-//        else
-//        {
-//            source.SetException(new Exception($"Command `{cmd}` failed with exit code `{process.ExitCode}`"));
-//        }
-
-//        process.Dispose();
-//    };
-
-//    try
-//    {
-//        process.Start();
-//    }
-//    catch(Exception e)
-//    {
-//        source.SetException(e);
-//    }
-
-//    return source.Task;
-//}
